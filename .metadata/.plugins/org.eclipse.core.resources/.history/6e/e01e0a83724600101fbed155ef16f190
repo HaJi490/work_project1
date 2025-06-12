@@ -1,0 +1,26 @@
+package edu.pnu;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import edu.pnu.domain.Orders;
+import edu.pnu.persistence.OrderRepository;
+
+@SpringBootTest
+public class OrderRepoTest {
+	@Autowired private OrderRepository orderRepo;
+	
+	@Test
+	public void tesstFindAll() {
+		List<Orders> orders = orderRepo.findAll();
+		assertFalse(orders.isEmpty()); // 데이터가 있는지 확인
+		orders.forEach(System.out::println;)
+	}
+	
+	
+}

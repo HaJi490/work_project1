@@ -1,0 +1,14 @@
+package edu.pnu.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.service.annotation.GetExchange;
+
+@RestController
+public class OlistController {
+
+	@GetMapping("/api/public/funnel/credit_card")
+	public void getCreditcard() {
+		
+	}
+}

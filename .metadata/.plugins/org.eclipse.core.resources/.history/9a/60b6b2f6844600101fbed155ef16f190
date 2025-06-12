@@ -1,0 +1,14 @@
+package edu.pnu.persistence;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import edu.pnu.domain.Orders;
+
+@Repository
+public interface OrderRepository extends JpaRepository<Orders, String>{
+	List<Orders> findTop10ByOrderByOrderIdDesc();
+	List<Orders> findTop10ByOrderByOrderOrderIdDesc();
+}

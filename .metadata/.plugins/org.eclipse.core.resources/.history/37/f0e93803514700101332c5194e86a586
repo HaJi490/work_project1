@@ -1,0 +1,96 @@
+package edu.pnu.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.pnu.domain.FunnelData;
+import edu.pnu.domain.FunnelDataResponse;
+import edu.pnu.domain.OrderStageCnt;
+import edu.pnu.persistence.OrderRepository;
+import edu.pnu.persistence.PaymentRepository;
+import edu.pnu.persistence.ReviewRepository;
+import edu.pnu.persistence.StageCntRepository;
+
+@Service
+public class FunnelDataService {
+//	@Autowired OrderRepository orderRepo;
+//	@Autowired PaymentRepository payRepo;
+//	@Autowired ReviewRepository reviewRepo;
+	@Autowired StageCntRepository cntRepo;
+	
+	public FunnelDataResponse findFunnelDataResponse(String keyword) {
+		FunnelDataResponse dto = new FunnelDataResponse();
+		
+		/// stage 구성
+		List<String> stage = new ArrayList<>();
+		stage.add("purchased");
+		stage.add("approved");
+		stage.add("shipped");
+		stage.add("delivered");
+
+		/// funnel data 구성
+		FunnelData data = new FunnelData();
+		// payType
+		data.setPayType(keyword);	// 결제수단 매개변수로 받기
+		
+		// count
+		OrderStageCnt rowCnt = cntRepo.findById(keyword).orElse(null);	// 한 payType만 가져오기
+		if(rowCnt == null) return null;
+		
+		List<Integer> count = new ArrayList<>();
+		count.add(rowCnt.getPurchaseCnt());
+		count.add(rowCnt.getApprovedCnt());
+		count.add(rowCnt.getShippedCnt());
+		count.add(rowCnt.getDeliveredCnt());
+		data.setCount(count);
+//		int purchaseCnt = orderRepo.countByPurchaseDateIsNotNull();
+//		int approveCnt = orderRepo.countByApprovedDateIsNotNull();
+//		int postCnt = orderRepo.countByPostedDateIsNotNull();
+//		int deliverCnt = orderRepo.countByDeliveredDateIsNotNull();
+//		count.add(purchaseCnt);
+//		count.add(approveCnt);
+//		count.add(postCnt);
+//		count.add(deliverCnt);
+//		data.setCount(count);
+//		
+//		// 전환율: 현단계/전단계
+		// 이탈률: 1 - 전환율
+		List<Double> conv = new ArrayList<>(); 
+		List<Double> churn = new ArrayList<>();
+		for(int i = 0 ; i < count.size() ; i++) {
+			if(i == 0) {
+				conv.add(1.0);
+				churn.add(0.0);
+			} else {
+				double prev = count.get(i - 1);
+				double now = count.get(i);
+				conv.add(now / prev);
+				churn.add(1 - (now / prev));
+			}
+		}
+		data.setConvRate(conv);
+		data.setChurnRate(churn);
+//		double purchaseCul = Double.valueOf(purchaseCnt); // 아예 바뀌는건가, 해당변수에서만 double인건가-----------------------------------?
+//		double approveCul = Double.valueOf(approveCnt);
+//		double postCul = Double.valueOf(postCnt);
+//		double deliverCul = Double.valueOf(deliverCnt);
+//		conv.add( purchaseCul / purchaseCul );
+//		conv.add( approveCul / purchaseCul );
+//		conv.add( postCul / approveCul );
+//		conv.add( deliverCul / postCul );
+//		data.setConvRate(conv);
+//		
+//		churn.add(1- conv.get(0));
+//		churn.add(1- conv.get(1));
+//		churn.add(1- conv.get(2));
+//		churn.add(1- conv.get(3));
+//		data.setChurnRate(churn);
+//		
+		dto.setFunnelStages(stage);
+		dto.setData(data);
+		return dto;
+	}
+}

@@ -1,0 +1,44 @@
+package edu.pnu.domain;
+
+import java.util.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter @Setter @ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+public class Orders {
+	@Id @Column(name="order_id") //카멜표기는 알아서 인식함----------------------------------!
+	private String orderId;
+	@Column(name="customer_id")
+	private String customerId;
+	@Column(name="order_status")
+	private String orderStatus;
+	
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name="order_purchase_timestamp") 
+	private Date purchaseDate;						//purchased
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name="order_approved_at")
+	private Date approvedDate;						//approved
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name="order_delivered_carrier_date")
+	private Date postedDate;						//shipped
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name="order_delivered_customer_date")
+	private Date deliveredDate;						//delivered
+
+//	@OneToMany
+}

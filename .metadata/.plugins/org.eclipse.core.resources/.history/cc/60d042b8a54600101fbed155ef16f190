@@ -1,0 +1,22 @@
+package edu.pnu.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.pnu.domain.FunnelDataResponse;
+import edu.pnu.persistence.OrderRepository;
+import edu.pnu.persistence.PaymentRepository;
+import edu.pnu.persistence.ReviewRepository;
+
+@Service
+public class FunnelDataService {
+	@Autowired OrderRepository orderRepo;
+	@Autowired PaymentRepository payRepo;
+	@Autowired ReviewRepository reviewRepo;
+	
+	public List<FunnelDataResponse> findFunnelDataResponse() {
+		List<FunnelData> data = new ArrayList<>;
+	}
+}

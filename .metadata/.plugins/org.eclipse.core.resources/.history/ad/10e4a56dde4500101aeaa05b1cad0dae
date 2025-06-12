@@ -1,0 +1,32 @@
+package edu.pnu.domain;
+
+import java.util.Date;
+
+import org.springframework.data.annotation.Id;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter @Setter @ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "order_reviews")
+public class OrderReviews {
+	@Id @Column(name="review_id")
+	private String reviewId;
+	@Column(name="order_id")
+	private String orderId;
+	@Column(name="review_score")
+	private int reviewScore;
+	@Column(name="review_creation_date")
+	private Date createDate;
+}

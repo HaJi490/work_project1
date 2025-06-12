@@ -1,0 +1,32 @@
+package edu.pnu.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.pnu.domain.FunnelData;
+import edu.pnu.domain.FunnelDataResponse;
+import edu.pnu.persistence.OrderRepository;
+import edu.pnu.persistence.PaymentRepository;
+import edu.pnu.persistence.ReviewRepository;
+
+@Service
+public class FunnelDataService {
+	@Autowired OrderRepository orderRepo;
+	@Autowired PaymentRepository payRepo;
+	@Autowired ReviewRepository reviewRepo;
+	
+	public List<FunnelDataResponse> findFunnelDataResponse(String keyword) {
+		FunnelData data = new FunnelData();
+		data.setPayType(payRepo.findBypayTypeContaing(keyword));	// 결제수단 매개변수로 받기
+		
+		List<Integer> count = new ArrayList<>();
+		count.add(orderRepo.countBypurchaseDateIsNotNUll());
+		count.add(orderRepo.countByapprovedDateIsNotNUll());
+		count.add(orderRepo.countBypostedDateIsNotNUll());
+		count.add(orderRepo.countBydeliveredDateIsNotNUll());
+		data.setCount(count);
+	}
+}

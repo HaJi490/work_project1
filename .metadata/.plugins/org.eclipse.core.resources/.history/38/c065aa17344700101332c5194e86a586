@@ -1,0 +1,60 @@
+package edu.pnu.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.pnu.domain.FunnelData;
+import edu.pnu.domain.FunnelDataResponse;
+import edu.pnu.persistence.OrderRepository;
+import edu.pnu.persistence.PaymentRepository;
+import edu.pnu.persistence.ReviewRepository;
+
+@Service
+public class FunnelDataService {
+	@Autowired OrderRepository orderRepo;
+	@Autowired PaymentRepository payRepo;
+	@Autowired ReviewRepository reviewRepo;
+	
+	public FunnelDataResponse findFunnelDataResponse(String keyword) {
+		FunnelDataResponse resp = new FunnelDataResponse();
+		
+		/// funnel data 구성
+		FunnelData data = new FunnelData();
+		// payType
+		data.setPayType(payRepo.findBypayTypeContaing(keyword));	// 결제수단 매개변수로 받기
+		// count
+		List<Integer> count = new ArrayList<>();
+		int purchaseCnt = orderRepo.countBypurchaseDateIsNotNUll();
+		int approveCnt = orderRepo.countByapprovedDateIsNotNUll();
+		int postCnt = orderRepo.countBypostedDateIsNotNUll();
+		int deliverCnt = orderRepo.countBydeliveredDateIsNotNUll();
+		count.add(purchaseCnt);
+		count.add(approveCnt);
+		count.add(postCnt);
+		count.add(deliverCnt);
+		data.setCount(count);
+		
+		// 전환율: 다음단계 / 현재단계------------------------?
+		List<Double> conv = new ArrayList<>(); 
+		double purchaseCul = Double.valueOf(purchaseCnt); // 아예 바뀌는건가, 해당변수에서만 double인건가-----------------------------------?
+		double approveCul = Double.valueOf(approveCnt);
+		double postCul = Double.valueOf(postCnt);
+		double deliverCul = Double.valueOf(deliverCnt);
+		conv.add( purchaseCul / purchaseCul );
+		conv.add( approveCul / purchaseCul );
+		conv.add( postCul / approveCul );
+		conv.add( deliverCul / postCul );
+		data.setConvRate(conv);
+		
+		// 이탈률: 1 - 전환율
+		List<Double> churn = new ArrayList<>();
+		
+		
+		
+		
+		return resp;
+	}
+}

@@ -1,0 +1,61 @@
+package edu.pnu;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import edu.pnu.domain.OrderPayments;
+import edu.pnu.domain.OrderReviews;
+import edu.pnu.domain.Orders;
+import edu.pnu.persistence.OrderRepository;
+import edu.pnu.persistence.PaymentRepository;
+import edu.pnu.persistence.ReviewRepository;
+
+//@SpringBootTest
+public class OrderRepoTest {
+	@Autowired private OrderRepository orderRepo;
+	@Autowired private PaymentRepository payRepo;
+	@Autowired private ReviewRepository reviewRepo;
+	
+	@Test
+	public void testFindOrder() {
+		Pageable paging = PageRequest.of(0, 9);
+		List<Orders> orderList = orderRepo.findAllByOrderByOrderIdDesc(paging);
+		assertFalse(orderList.isEmpty()); // 데이터가 있는지 확인
+
+		System.out.println("**검색 결과**");
+		for (Orders order : orderList) {
+			System.out.println("--->" + order) ;
+		}
+	}
+	
+	@Test
+	public void testFindPay() {
+		Pageable paging = PageRequest.of(0, 9);
+		List<OrderPayments> payList = payRepo.findAllByOrderByOrderIdDesc(paging);
+		assertFalse(payList.isEmpty());
+		
+		System.out.println("**검색 결과**");
+		for (OrderPayments pay : payList) {
+			System.out.println("--->" + pay) ;
+		}
+	}
+	
+	@Test
+	public void testFindReview() {
+		Pageable paging = PageRequest.of(0, 9);
+		List<OrderReviews> reviewList = reviewRepo.findAllByOrderByReviewIdDesc(paging);
+		assertFalse(reviewList.isEmpty());
+		
+		System.out.println("**검색 결과**");
+		for (OrderReviews rev : reviewList) {
+			System.out.println("--->" + rev) ;
+		}
+	}
+}

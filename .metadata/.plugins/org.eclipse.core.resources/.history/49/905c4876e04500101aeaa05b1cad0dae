@@ -1,0 +1,17 @@
+package edu.pnu;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import edu.pnu.controller.OlistController;
+
+@SpringBootTest
+public class OrderRepoTest {
+	@Autowired private OlistController olist;
+	
+	@Test
+	public void testFindbyId() {
+		List<Order> orders = olist.
+	}
+}
