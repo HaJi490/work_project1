@@ -16,19 +16,37 @@ public class FunnelDataService {
 
 	@Autowired StageCntRepository cntRepo;
 	
-	public FunnelDataResponse findFunnelDataResponse(String patType) {
+//	// 전체 데이터
+//	public FunnelDataResponse findFunnelDataResponse() {
+//		FunnelDataResponse dto = new FunnelDataResponse();
+//		
+//		/// stage 구성
+//		List<String> stage = List.of("purchased", "approved", "shipped", "delivered");
+//		
+//		/// funnelData List 구성
+//		List<FunnelData> data = new ArrayList<>();
+//		List<OrderStageCnt> allCnt = cntRepo.findAll();
+//		if(allCnt == null) return null;
+//		
+//		for()
+//			FunnelData perData = new FunnelData();
+//		
+//	}
+	
+	// 페이타입 별
+	public FunnelDataResponse findFunnelDataResponseByPaytype(String payType) {
 		FunnelDataResponse dto = new FunnelDataResponse();
 		
 		/// stage 구성
-		List<String> stage = List.of("purchased", "approved", "shipped", "delivered");
+		List<String> stage = List.of("구매", "승인", "배송시작", "배송완료");
 
-		/// funnel data 구성
+		/// funnelData 구성
 		FunnelData data = new FunnelData();
 		// payType
-		data.setPayType(patType);	// 결제수단 매개변수로 받기
+		data.setPayType(payType);	// 결제수단 매개변수로 받기
 		
 		// count
-		OrderStageCnt rowCnt = cntRepo.findById(patType).orElse(null);	// 한 payType만 가져오기
+		OrderStageCnt rowCnt = cntRepo.findById(payType).orElse(null);	// 한 payType만 가져오기
 		if(rowCnt == null) return null;
 		
 		List<Integer> count = new ArrayList<>();
@@ -44,17 +62,17 @@ public class FunnelDataService {
 		List<Double> churn = new ArrayList<>();
 		for(int i = 0 ; i < count.size() ; i++) {
 			if(i == 0) {
-				conv.add(1.000);
-				churn.add(0.000);
+				conv.add(100.0);
+				churn.add(0.0);
 			} else {
 				double prev = count.get(i - 1);
 				double now = count.get(i);
 				
 				double rate = now/prev;
-				double roundConv = Math.round(rate * 1000) / 1000.0;
+				double roundConv = (Math.round(rate * 1000) * 100 )/ 1000.0;
 				conv.add(roundConv);
 				
-				double roundChurn = Math.round((1-rate) * 1000) / 1000.0;
+				double roundChurn = (Math.round((1-rate) * 1000) * 100 )/ 1000.0;
 				churn.add(roundChurn);
 			}
 		}
@@ -65,4 +83,5 @@ public class FunnelDataService {
 		dto.setFunnelStages(stage);
 		return dto;
 	}
+
 }

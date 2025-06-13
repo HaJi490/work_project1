@@ -12,11 +12,16 @@ import edu.pnu.service.FunnelDataService;
 @RestController
 public class FunnelDataController {
 	@Autowired FunnelDataService funnelServ;
-
+	
+//	@GetMapping("/api/public/funnel")
+//	public ResponseEntity<?> getCntAll(){
+//		return null;
+//	}
+	
 	@GetMapping("/api/public/funnel/{payType}")
-	public ResponseEntity<?> getPaytypeCnt(@PathVariable String payType) {
-		FunnelDataResponse resp = funnelServ.findFunnelDataResponse(payType);
+	public ResponseEntity<?> getCntByPaytype(@PathVariable String payType) {
+		FunnelDataResponse resp = funnelServ.findFunnelDataResponseByPaytype(payType);
 		if(resp == null) return ResponseEntity.notFound().build();
-		else return ResponseEntity.ok(resp);
+		return ResponseEntity.ok(resp);
 	}
 }

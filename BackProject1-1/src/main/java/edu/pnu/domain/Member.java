@@ -21,7 +21,9 @@ public class Member {
 	private String id;
 	private String password;
 	private String username;
-	private Date createDate;
-	private boolean enabled;
+	@Builder.Default
+	private Date createDate = new Date();
+	@Builder.Default
+	private boolean enabled = true;
 	
 }
