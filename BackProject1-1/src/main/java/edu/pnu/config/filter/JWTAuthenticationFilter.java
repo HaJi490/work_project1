@@ -1,6 +1,8 @@
 package edu.pnu.config.filter;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.pnu.domain.Member;
+import edu.pnu.persistence.MemberRepository;
 import edu.pnu.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,16 +29,17 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 	private final AuthenticationManager authManager; // 인증객체
+	private final MemberRepository memRepo;	// di가 아니어서 SecurityConfig에서 매개변수로 넘겨줘야 사용가능
 	
 	@Override	// POST /login 요청 시 인증 메서드
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			Member member = mapper.readValue(request.getInputStream(), Member.class);	//
+			Member member = mapper.readValue(request.getInputStream(), Member.class);
 			Authentication authToken = new UsernamePasswordAuthenticationToken(member.getId(), member.getPassword());
 			
-			// 인증 진행 -> UserDetailService의 loadUserByUsername에서 DB 사용자 정보를 읽어온 뒤 요청정보와 비교----------------------------------만들어야함
+			// 인증 진행 -> UserDetailService의 loadUserByUsername에서 DB 사용자 정보를 읽어온 뒤 요청정보와 비교
 			return authManager.authenticate(authToken);
 		} catch (Exception e) {
 			log.info(e.getMessage());
@@ -51,10 +55,24 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		User user = (User)authResult.getPrincipal();
 		System.out.println("auth: " + user);
 		
-		// username으로 JWT를 생성
+		Member member = memRepo.findById(user.getUsername()).get();
+		
+		// JWT를 생성 (username으로)
 		String token = JWTUtil.getJWT(user.getUsername());
 		
-		// Response Header에 JWT를 저장해 응답
+		// 응답 Json 생성
+		Map<String, Object> resp = new HashMap<>();
+		resp.put("role", member.getRole());
+		resp.put("username", member.getUsername());
+		
+		response.setCharacterEncoding("UTF-8");
+		
+		ObjectMapper mapper = new ObjectMapper();
+	    String responseJson = mapper.writeValueAsString(resp);
+	    response.getWriter().write(responseJson);
+//		response.getWriter().print(member.getRole());	// 응답이 하나일때만 가능
+		
+		// Response 헤더에 JWT를 저장해 응답
 		response.addHeader(HttpHeaders.AUTHORIZATION, token);
 		response.setStatus(HttpStatus.OK.value());
 	}

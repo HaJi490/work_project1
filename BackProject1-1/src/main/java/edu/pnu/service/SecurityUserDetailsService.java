@@ -1,6 +1,7 @@
 package edu.pnu.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +21,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
 								.orElseThrow(()->new UsernameNotFoundException("Not Found!"));
 		return User.builder().username(member.getId())
 							.password(member.getPassword())
-							/// (추가) 권한
+							.authorities(AuthorityUtils.createAuthorityList(member.getRole().toString()))
 							.disabled(!member.isEnabled()).build();
 	}
 

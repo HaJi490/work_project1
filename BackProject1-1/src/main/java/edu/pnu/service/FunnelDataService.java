@@ -16,23 +16,6 @@ public class FunnelDataService {
 
 	@Autowired StageCntRepository cntRepo;
 	
-//	// 전체 데이터
-//	public FunnelDataResponse findFunnelDataResponse() {
-//		FunnelDataResponse dto = new FunnelDataResponse();
-//		
-//		/// stage 구성
-//		List<String> stage = List.of("purchased", "approved", "shipped", "delivered");
-//		
-//		/// funnelData List 구성
-//		List<FunnelData> data = new ArrayList<>();
-//		List<OrderStageCnt> allCnt = cntRepo.findAll();
-//		if(allCnt == null) return null;
-//		
-//		for()
-//			FunnelData perData = new FunnelData();
-//		
-//	}
-	
 	// 페이타입 별
 	public FunnelDataResponse findFunnelDataResponseByPaytype(String payType) {
 		FunnelDataResponse dto = new FunnelDataResponse();

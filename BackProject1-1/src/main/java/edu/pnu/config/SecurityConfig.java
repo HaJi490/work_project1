@@ -41,10 +41,11 @@ public class SecurityConfig {
 		
 		/// 권한설정(Authorizatin Filter)
 		http.authorizeHttpRequests(auth->auth
-				.requestMatchers("/**").permitAll() //api/public/**
-				.anyRequest().authenticated());										// 다 permitAll이면 Authorization 필요xx ------------------------------!
+				.requestMatchers("/api/member/**").hasRole("MEMBER") 
+				.requestMatchers("/api/manager/**").hasRole("MANAGER")
+				.anyRequest().permitAll());										// 다 permitAll이면 Authorization 필요xx ------------------------------!
 		
-		http.formLogin(frmLogin->frmLogin.disable());								//내가 ui까지 제공할때 사용----------------------------------------!
+		http.formLogin(frmLogin->frmLogin.disable());							//내가 ui까지 제공할때 사용설정----------------------------------------!
 		
 		http.httpBasic(basic-> basic.disable());
 		
@@ -52,7 +53,7 @@ public class SecurityConfig {
 		http.sessionManagement(sm->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		
 		/// 작성한 필터(인증) 추가
-		http.addFilter(new JWTAuthenticationFilter(authConfig.getAuthenticationManager()));	//인증 객체 생성
+		http.addFilter(new JWTAuthenticationFilter(authConfig.getAuthenticationManager(), memRepo));	// 생성자에서 넘겨줘야함 //인증 객체 생성
 		
 		/// oauth2 로그인
 		http.oauth2Login(oauth2->oauth2.successHandler(successHandler));
@@ -72,9 +73,15 @@ public class SecurityConfig {
 	
 	private CorsConfigurationSource corsSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.addAllowedOrigin("http://localhost:5173");
+		config.addAllowedOrigin("http://localhost:5173");	
+		config.addAllowedOrigin("http://localhost:5174");	
+		config.addAllowedOrigin("http://10.125.121.173:5173");	
+		config.addAllowedOrigin("http://10.125.121.173:5174");	
+		config.addAllowedOrigin("http://10.125.121.177:5173");	
+		config.addAllowedOrigin("http://10.125.121.177:5174");	
 		config.addAllowedMethod(CorsConfiguration.ALL);
 		config.addAllowedHeader(CorsConfiguration.ALL);
+//		config.addAllowedHeader("Content-Type");
 		config.setAllowCredentials(true);
 		config.addExposedHeader(HttpHeaders.AUTHORIZATION);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -47,7 +47,7 @@ public class JWTAuthorizaionFilter extends OncePerRequestFilter{	 // OncePerRequ
 		}
 		
 		Member findmember = opt.get();
-		User user = new User(findmember.getId(), findmember.getPassword(), AuthorityUtils.createAuthorityList("ROLE_USER")); /// FIXME 권한(ROLE)설정시 변경
+		User user = new User(findmember.getId(), findmember.getPassword(), AuthorityUtils.createAuthorityList(findmember.getRole().toString())); /// 변경완료> 권한(ROLE)설정시 변경
 		Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());	// null: 비밀번호, 이미 인증 완료되서 비워둠
 		SecurityContextHolder.getContext().setAuthentication(auth); 	// 시큐리티 세션에 등록
 		

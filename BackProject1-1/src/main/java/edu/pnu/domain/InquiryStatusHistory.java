@@ -2,11 +2,14 @@ package edu.pnu.domain;
 
 import java.util.Date;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,19 +22,15 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Member {
+public class InquiryStatusHistory {
 	@Id
-	@Column( nullable = false)
-	private String id;
-	private String password;
-	private String username;
-	@Builder.Default
-	private Date createDate = new Date();
-	@Builder.Default
-	@Column(nullable = false)
-	private boolean enabled = true;
-	@Builder.Default
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //AI
+	private long id;
+	private long inquiryId;
 	@Enumerated(EnumType.STRING)
-	private Role role = Role.ROLE_MEMBER;
-	
+	private InquiryStatus status;
+	private String comment;
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Builder.Default
+	private Date modifiedAt = new Date();
 }
