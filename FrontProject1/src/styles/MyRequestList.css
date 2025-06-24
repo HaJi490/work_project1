@@ -1,0 +1,77 @@
+/* html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+} */
+
+/* 기본 레이아웃 */
+.mypage-container {
+  width: 600px;
+  font-family: sans-serif;
+  /* background-color: #f7f8fa; */
+  color: #333;
+}
+
+/* 헤더 */
+
+/* .logo {
+  font-weight: bold;
+  color: #0077cc;
+  font-size: 20px;
+} */
+
+/* .nav-menu a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #555;
+  font-size: 14px;
+} */
+
+/* 메인 */
+
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  border-bottom: 2px solid ;
+}
+
+
+.profile-name {
+  all: unset;
+  font-size: 25px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.profile-name:focus{
+  outline: none;
+}
+
+/* 문의 테이블 */
+.inquiry-section {
+  margin: 20px 12px 0 12px;
+}
+
+
+/* .section-title {
+  font-size: 16px;
+  font-weight: bold;
+  border-bottom: 2px solid #000;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+} */
+
+
+
+.status.approved {
+  color: #0077cc;
+  font-weight: bold;
+}
+
+.status.pending {
+  color: #999;
+}
