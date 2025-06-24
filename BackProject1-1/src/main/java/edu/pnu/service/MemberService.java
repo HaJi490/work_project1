@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import edu.pnu.domain.Member;
 import edu.pnu.domain.MemberInfoDto;
+import edu.pnu.domain.MemberUpdateRequest;
+import edu.pnu.domain.MemberUpdateResult;
 import edu.pnu.domain.Role;
 import edu.pnu.persistence.MemberRepository;
 
@@ -45,15 +47,27 @@ public class MemberService {
 	}
 	
 	// 회원정보 수정
-	public boolean updateMember(String id, Member mem) {
-		Member dbmem = memRepo.findById(id).get();
-		if (dbmem == null) return false;
-		if(mem.getUsername() != null && !mem.getUsername().trim().isEmpty()) 
+	public MemberUpdateResult updateMember(String id, MemberUpdateRequest mem) {
+		Optional<Member> opt = memRepo.findById(id);
+		if (opt.isEmpty()) return MemberUpdateResult.NOT_FOUND;
+		
+		Member dbmem = opt.get();
+		if(mem.getUsername() != null && !mem.getUsername().trim().isEmpty()) {
 			dbmem.setUsername(mem.getUsername());
-		if(mem.getPassword() != null && !mem.getPassword().trim().isEmpty()) 
-			dbmem.setPassword(encoder.encode(mem.getPassword()));
+		}
+		
+		// 새 비밀번호바꾸기
+		if(mem.getNewpwd() != null && !mem.getNewpwd().trim().isEmpty()) { 
+			// 현재 비밀번호 확인
+			if( mem.getCurrentpwd() == null || !encoder.matches(mem.getCurrentpwd(), dbmem.getPassword())) {
+				return MemberUpdateResult.PASSWORD_MISMATCH;
+			}
+		
+			dbmem.setPassword(encoder.encode(mem.getNewpwd()));
+		}
+		
 		memRepo.save(dbmem);
-		return true;
+		return MemberUpdateResult.SUCCESS;
 	}
 	
 	// 회원 탈퇴

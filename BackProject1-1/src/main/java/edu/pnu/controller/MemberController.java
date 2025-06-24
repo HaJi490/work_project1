@@ -4,6 +4,7 @@ import java.net.URLDecoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.pnu.domain.IdCheckResponse;
 import edu.pnu.domain.Member;
 import edu.pnu.domain.MemberInfoDto;
+import edu.pnu.domain.MemberUpdateRequest;
+import edu.pnu.domain.MemberUpdateResult;
 import edu.pnu.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -71,11 +74,21 @@ public class MemberController {
 	
 	// 회원정보 수정 ----------------dto로 받기, ResponseEntity
 	@PostMapping("/api/member/update")
-	public boolean updateMember(@RequestBody Member member,
+	public ResponseEntity<?> updateMember(@RequestBody MemberUpdateRequest member,
 							@AuthenticationPrincipal User user) {
 		String memId = user.getUsername();
-		if(!memserv.updateMember(memId, member)) return false;
-		return true;
+		MemberUpdateResult result = memserv.updateMember(memId, member);
+
+	    switch (result) {
+	        case SUCCESS:
+	            return ResponseEntity.ok("회원정보가 성공적으로 수정되었습니다.");
+	        case NOT_FOUND:
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 회원입니다.");
+	        case PASSWORD_MISMATCH:
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("현재 비밀번호가 일치하지 않습니다.");
+	        default:
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("알 수 없는 오류가 발생했습니다.");
+	    }
 	}
 	
 	// 회원탈퇴 ----------------ResponseEntity

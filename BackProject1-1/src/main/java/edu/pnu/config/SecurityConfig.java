@@ -74,11 +74,7 @@ public class SecurityConfig {
 	private CorsConfigurationSource corsSource() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.addAllowedOrigin("http://localhost:5173");	
-		config.addAllowedOrigin("http://localhost:5174");	
-		config.addAllowedOrigin("http://10.125.121.173:5173");	
-		config.addAllowedOrigin("http://10.125.121.173:5174");	
 		config.addAllowedOrigin("http://10.125.121.177:5173");	
-		config.addAllowedOrigin("http://10.125.121.177:5174");	
 		config.addAllowedMethod(CorsConfiguration.ALL);
 		config.addAllowedHeader(CorsConfiguration.ALL);
 //		config.addAllowedHeader("Content-Type");

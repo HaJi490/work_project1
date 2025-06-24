@@ -48,7 +48,7 @@ public class InquiryService {
 	/// Manager
 	// 전체분석 요청 목록
 	public List<InquiryListDto> getAllList() {
-		List<Inquiry> repolist = inquiryRepo.findAll();
+		List<Inquiry> repolist = inquiryRepo.findAllByOrderByInquiryDateDesc();
 		List<InquiryListDto> dtolist = new ArrayList<>();
 		for(Inquiry repo : repolist) {
 			InquiryListDto dto = new InquiryListDto();

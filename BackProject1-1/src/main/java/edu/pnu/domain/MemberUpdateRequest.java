@@ -12,7 +12,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class MemberInfoDto {
-	private String id;
+public class MemberUpdateRequest {
 	private String username;
+	private String currentpwd;
+	private String newpwd;
 }

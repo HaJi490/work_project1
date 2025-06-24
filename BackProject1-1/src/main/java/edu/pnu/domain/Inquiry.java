@@ -47,4 +47,17 @@ public class Inquiry {
 	@ManyToOne(fetch = FetchType.LAZY)	// 불필요한 로딩방지
 	@JoinColumn(name="member_id", referencedColumnName ="id", nullable=false)
 	private Member member;
+	
+    public Inquiry(Long id, String name, String organization, String email, String phone,
+            String title, String content, InquiryStatus status, Date inquiryDate) {
+		this.id = id;
+		this.name = name;
+		this.organization = organization;
+		this.email = email;
+		this.phone = phone;
+		this.title = title;
+		this.content = content;
+		this.status = status;
+		this.inquiryDate = inquiryDate;
+	}
 }

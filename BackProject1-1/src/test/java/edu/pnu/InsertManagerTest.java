@@ -14,7 +14,7 @@ public class InsertManagerTest {
 	@Autowired private MemberRepository memRepo;
 	@Autowired private PasswordEncoder encoder;
 	
-	//@Test
+	@Test
 	public void insertManager() {
 		memRepo.save(Member.builder()
 							.id("manager")
@@ -23,7 +23,7 @@ public class InsertManagerTest {
 							.role(Role.ROLE_MANAGER).build());
 	}
 	
-	@Test
+	//@Test
 	public void insertMember() {
 		memRepo.save(Member.builder()
 							.id("member@naver.com")

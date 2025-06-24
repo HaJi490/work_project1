@@ -13,9 +13,12 @@ import edu.pnu.domain.InquiryListDto;
 
 @Repository
 public interface InquiryRepository extends JpaRepository<Inquiry, Long>{
-    // 리스트 목록별로
+    // 매니저 리스트
+	List<Inquiry> findAllByOrderByInquiryDateDesc();
+	
+	// 멤버 리스트
 	@Query("SELECT i.id, i.title, i.organization, i.inquiryDate, i.status " + 
-            "FROM Inquiry i WHERE i.member.id = :memberId")
+            "FROM Inquiry i WHERE i.member.id = :memberId ORDER BY inquiryDate DESC")
      List<InquiryListDto> findAllByMemberId(@Param("memberId") String memberId);
     
     // 매니저 상세보기_member빼고 들고옴

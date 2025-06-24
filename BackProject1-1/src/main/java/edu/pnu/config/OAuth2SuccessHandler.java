@@ -47,7 +47,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 		jwtCookie.setHttpOnly(true);	// XSS 공격방지
 		jwtCookie.setPath("/");			// 모든 경로에서 쿠키 사용가능
 		jwtCookie.setSecure(true);		// https가 아니면 false
-//		jwtCookie.setDomain("10.125.121.177");	// ------------------------?? 쿠키가 서브도메인 간 공유할 때 주로 쓰이고,IP기반 환경에서는 오히려 설정하지 않는 것이 낫기도 해.
 		jwtCookie.setMaxAge(60*60); 		// 쿠키 유효시간(1시간)
 		response.addCookie(jwtCookie);	// 쿠키에 토큰 저장
 		
